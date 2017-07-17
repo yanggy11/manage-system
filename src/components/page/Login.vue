@@ -40,9 +40,7 @@
             submitForm(formName) {
 
                 const self = this;
-                console.log(self.ruleForm);
                 self.$http.post('http://localhost:1986/api/user/login',self.ruleForm).then(function(data) {
-                    console.log(data.body);
                     self.$router.push('/readme');
                 },function(data) {
                     

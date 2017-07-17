@@ -41,6 +41,10 @@
                             {
                                 index: 'vuetable',
                                 title: 'Vue表格组件'
+                            },
+                            {
+                                index: 'userList',
+                                title: '用户管理'
                             }
                         ]
                     },
