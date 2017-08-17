@@ -96,7 +96,7 @@
     .sidebar{
         display: block;
         position: absolute;
-        width: 250px;
+        width: 200px;
         left: 0;
         top: 70px;
         bottom:0;
@@ -105,4 +105,12 @@
     .sidebar > ul {
         height:100%;
     }
+    .el-menu {
+    border-radius: 2px;
+    list-style: none;
+    position: relative;
+    margin: 0;
+    padding-left: 0;
+    background-color:black;
+}
 </style>

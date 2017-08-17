@@ -10,7 +10,6 @@
                     <el-form ref="form" :model="form" label-width="80px">
                         <el-form-item label="表单名称">
                             <el-input v-model="form.name"></el-input>
-                            <el-input v-model="form.age"></el-input>
                         </el-form-item>
                         <el-form-item label="选择器">
                             <el-select v-model="form.region" placeholder="请选择">
