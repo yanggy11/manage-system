@@ -37,7 +37,7 @@
                     </el-form>
                 </div>
 
-        <el-table :data="tableData" border style="width: 100%;">
+        <el-table v-loading.body="loading" :data="tableData" border style="width: 100%;">
             <el-table-column prop="id" label="ID" align="center">
             </el-table-column>
             <el-table-column prop="name" label="姓名" align="center">
@@ -80,7 +80,8 @@
                                     resource: '小天才',
                                     desc: ''
                                 },
-                cur_page: 1
+                cur_page: 1,
+                loading: true
             }
         },
         created(){
@@ -95,6 +96,7 @@
                 let self = this;
                  self.$http.post("http://localhost:1986/api/user/userList",{}).then(function(data) {
                     self.tableData = data.body;
+                    self.loading = false;
                 },function(data) {
 
                 })
