@@ -40,10 +40,13 @@
             submitForm(formName) {
 
                 const self = this;
-                self.$http.post('http://localhost:1987/api-user/api/user/login',self.ruleForm).then(function(data) {
+                self.$http.post('http://localhost:1987/api-user/api/user/login',self.ruleForm,
+                {headers:{"token":"token"}})
+                .then(function(data) {
+                    console.log(data);
                     self.$router.push('/readme');
                 },function(data) {
-                    
+                    console.log(data);
                 });
                 /*self.$refs[formName].validate((valid) => {
                     if (valid) {

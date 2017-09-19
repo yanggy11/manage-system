@@ -94,7 +94,7 @@
             },
             getData(){
                 let self = this;
-                 self.$http.post("http://localhost:1986/api/user/userList",{}).then(function(data) {
+                 self.$http.post("http://localhost:1987/api-user/api/user/userList",{},{headers:{"token":"token"}}).then(function(data) {
                     self.tableData = data.body;
                     self.loading = false;
                 },function(data) {
