@@ -1,45 +1,5 @@
 <template>
     <div class="table">
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-menu"></i> 表格</el-breadcrumb-item>
-                <el-breadcrumb-item>基础表格</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="form-box">
-                    <el-form ref="form" :model="form" label-width="80px">
-                        <el-form-item label="表单名称">
-                            <el-input v-model="form.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="表单名称">
-                            <el-input v-model="form.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="选择器">
-                            <el-select v-model="form.region" placeholder="请选择">
-                                <el-option key="bbk" label="步步高" value="bbk"></el-option>
-                                <el-option key="xtc" label="小天才" value="xtc"></el-option>
-                                <el-option key="imoo" label="imoo" value="imoo"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="日期时间">
-                            <el-col :span="11">
-                                <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-                            </el-col>
-                            <el-col class="line" :span="2">-</el-col>
-                            <el-col :span="11">
-                                <el-time-picker type="fixed-time" placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="多选框">
-                            <el-checkbox-group v-model="form.type">
-                                <el-checkbox label="步步高" name="type"></el-checkbox>
-                                <el-checkbox label="小天才" name="type"></el-checkbox>
-                                <el-checkbox label="imoo" name="type"></el-checkbox>
-                            </el-checkbox-group>
-                        </el-form-item>
-                    </el-form>
-                </div>
-
         <el-table v-loading.body="loading" :data="tableData" border style="width: 100%;">
             <el-table-column prop="id" label="ID" align="center">
             </el-table-column>
@@ -108,7 +68,7 @@
             getData(currentPage, currentSize){
                 let self = this;
                 self.$http.post('http://localhost:1987'+'/users/api/user/userList',{page:currentPage,pageSize:currentSize},{headers:{"Authorization":localStorage.getItem("AuthenticationToken")}}).then(function(data) {
-                    
+
                     let pageData = data.body;
                     self.total = pageData.totalRecord;
                     self.tableData = data.body.data;

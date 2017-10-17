@@ -18,10 +18,6 @@ export default new Router({
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
                 },
                 {
-                    path: '/basetable',
-                    component: resolve => require(['../components/page/BaseTable.vue'], resolve)
-                },
-                {
                     path: '/baseform',
                     component: resolve => require(['../components/page/BaseForm.vue'], resolve)
                 },
