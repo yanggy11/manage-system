@@ -32,16 +32,8 @@
                     {
                         icon: 'el-icon-menu',
                         index: '2',
-                        title: '表格',
+                        title: '数据管理',
                         subs: [
-                            {
-                                index: 'basetable',
-                                title: '基础表格'
-                            },
-                            {
-                                index: 'vuetable',
-                                title: 'Vue表格组件'
-                            },
                             {
                                 index: 'userList',
                                 title: '用户管理'
