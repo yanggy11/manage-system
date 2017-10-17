@@ -11,6 +11,9 @@
                         <el-form-item label="表单名称">
                             <el-input v-model="form.name"></el-input>
                         </el-form-item>
+                        <el-form-item label="表单名称">
+                            <el-input v-model="form.name"></el-input>
+                        </el-form-item>
                         <el-form-item label="选择器">
                             <el-select v-model="form.region" placeholder="请选择">
                                 <el-option key="bbk" label="步步高" value="bbk"></el-option>
@@ -57,9 +60,12 @@
         </el-table>
         <div class="pagination">
             <el-pagination
+                    @size-change="handleSizeChange"
                     @current-change ="handleCurrentChange"
-                    layout="prev, pager, next"
-                    :total="1000">
+                    layout="sizes,total, prev, pager, next, jumper"
+                    :page-sizes="[10, 15, 20, 30]"
+                    :total="total"
+                    :page-size="cur_size">
             </el-pagination>
         </div>
     </div>
@@ -81,27 +87,39 @@
                                     desc: ''
                                 },
                 cur_page: 1,
+                cur_size: 10,
+                total:1,
                 loading: true
             }
         },
         created(){
-            this.getData();
+            this.getData(this.cur_page,this.cur_size);
         },
         methods: {
-            handleCurrentChange(val){
-                this.cur_page = val;
-                this.getData();
+            handleSizeChange(val) {
+                this.cur_size = val;
+                this.getData(1, val);
             },
-            getData(){
+            handleCurrentChange(val){
+                console.log(val);
+                this.cur_page = val;
+                this.getData(val, this.cur_size);
+            },
+            getData(currentPage, currentSize){
                 let self = this;
-                 self.$http.post("http://localhost:1987/api-user/api/user/userList",{},{headers:{"token":"token"}}).then(function(data) {
-                    self.tableData = data.body;
+                self.$http.post('http://localhost:1987'+'/users/api/user/userList',{page:currentPage,pageSize:currentSize},{headers:{"Authorization":localStorage.getItem("AuthenticationToken")}}).then(function(data) {
+                    
+                    let pageData = data.body;
+                    self.total = pageData.totalRecord;
+                    self.tableData = data.body.data;
                     self.loading = false;
-                },function(data) {
 
+                    this.$message("成功加载用户！");
+                },function(data) {
+                    this.$$message.error("加载失败!");
                 })
             },
-             sexFormatter(row, column) {
+            sexFormatter(row, column) {
                  if(row.sex === 0) {
                      return "男";
                  }

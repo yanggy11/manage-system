@@ -38,25 +38,15 @@
         },
         methods: {
             submitForm(formName) {
-
                 const self = this;
-                self.$http.post('http://localhost:1987/api-user/api/user/login',self.ruleForm,
-                {headers:{"token":"token"}})
+                self.$http.post('http://localhost:1987'+'/auth/login',self.ruleForm)
                 .then(function(data) {
                     console.log(data);
+                    localStorage.setItem("AuthenticationToken",data.body.data.token);
                     self.$router.push('/readme');
                 },function(data) {
                     console.log(data);
                 });
-                /*self.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        localStorage.setItem('ms_username',self.ruleForm.username);
-                        self.$router.push('/readme');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });*/
             }
         }
     }
