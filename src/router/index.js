@@ -18,10 +18,13 @@ export default new Router({
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
                 },
                 {
+<<<<<<< HEAD
                     path: '/vuetable',
                     component: resolve => require(['../components/page/VueTable.vue'], resolve)     // vue-datasource组件
                 },
                 {
+=======
+>>>>>>> 7bdcd85e98e7bd64d4d1617097fa86da768a2e58
                     path: '/baseform',
                     component: resolve => require(['../components/page/BaseForm.vue'], resolve)
                 },

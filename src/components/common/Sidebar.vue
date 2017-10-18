@@ -32,13 +32,16 @@
                     {
                         icon: 'el-icon-menu',
                         index: '2',
-                        title: '表格',
+                        title: '数据管理',
                         subs: [
                             {
+<<<<<<< HEAD
                                 index: 'vuetable',
                                 title: 'Vue表格组件'
                             },
                             {
+=======
+>>>>>>> 7bdcd85e98e7bd64d4d1617097fa86da768a2e58
                                 index: 'userList',
                                 title: '用户管理'
                             }
