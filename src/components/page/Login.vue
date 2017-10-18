@@ -39,7 +39,7 @@
         methods: {
             submitForm(formName) {
                 const self = this;
-                self.$http.post('http://localhost:1987'+'/auth/login',self.ruleForm)
+                self.$http.post('http://localhost:1987'+ '/auth/login',self.ruleForm)
                 .then(function(data) {
                     console.log(data);
                     localStorage.setItem("AuthenticationToken",data.body.data.token);
