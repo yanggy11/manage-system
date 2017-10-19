@@ -1,10 +1,8 @@
 <template>
     <div class="table">
-        <div>
             <el-button type="primary" @click="openUserInfo(0, 0)">新增</el-button>
-        </div>
         <div class="criteria">
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="criteria.gender" placeholder="请选择">
                 <el-option
                 v-for="item in genders"
                 :key="item.value"
@@ -13,20 +11,18 @@
                 </el-option>
             </el-select>
         </div>
-        <el-table v-loading.body="loading" :data="tableData" border style="width: 100%;">
-            <el-table-column prop="id" label="ID" align="center">
+        <el-table v-loading.body="loading" :data="tableData" border>
+            <el-table-column prop="name" label="姓名" align="center" width="130">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" align="center">
+            <el-table-column prop="age" label="年龄" align="center"  width="105">
             </el-table-column>
-            <el-table-column prop="age" label="年龄" align="center">
+            <el-table-column prop="sex" label="性别" align="center"  width="105">
             </el-table-column>
-            <el-table-column prop="sex" label="性别" align="center" :formatter="sexFormatter">
+            <el-table-column prop="email" label="邮箱" align="center"  width="260">
             </el-table-column>
-            <el-table-column prop="email" label="邮箱" align="center" >
+            <el-table-column prop="phone" label="手机号" align="center"  width="174">
             </el-table-column>
-            <el-table-column prop="phone" label="手机号" align="center">
-            </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center"  width="178">
                 <template scope="scope">
                     <el-button size="small" @click="openUserInfo(1, scope.row.id)">编辑</el-button>
                     <el-button size="small" type="danger" @click="deleteUser(scope.row.id)">删除</el-button>
@@ -39,7 +35,7 @@
         </div>
         <div style="width:30%;">
             <el-dialog title="收货地址" :visible.sync="userInfoDialog" :modal="true">
-                <el-form :model="form">
+                <el-form>
                     <el-form-item label="姓名" :label-width="formLabelWidth">
                         <el-input v-model="userInfo.name" auto-complete="off"></el-input>
                     </el-form-item>
@@ -76,7 +72,7 @@ export default {
         return {
             tableData: [],
             cur_page: 1,
-            cur_size: 20,
+            cur_size: 15,
             total: 1,
             loading: true,
             userInfoDialog: false,
@@ -88,7 +84,10 @@ export default {
             },{
                 value:"1",
                 label:"女"
-            }]
+            }],
+            criteria: {
+                gender: ''
+            }
         }
     },
     created() {

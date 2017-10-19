@@ -52,7 +52,7 @@
     }
     .header .logo{
         float: left;
-        width:250px;
+        width: 200px;
         text-align: center;
     }
     .user-info {

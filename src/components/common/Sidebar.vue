@@ -36,7 +36,7 @@
                         subs: [
                             {
                                 index: 'userList',
-                                title: '用户管理'
+                                title: '用户部门关系管理'
                             }
                         ]
                     },
@@ -88,21 +88,35 @@
     .sidebar{
         display: block;
         position: absolute;
-        width: 200px;
+        width: 170px;
         left: 0;
         top: 70px;
         bottom:0;
         background: black;
+        alignment: left;
     }
     .sidebar > ul {
         height:100%;
     }
     .el-menu {
-    border-radius: 2px;
-    list-style: none;
-    position: relative;
-    margin: 0;
-    padding-left: 0;
-    background-color:black;
-}
+        border-radius: 2px;
+        list-style: none;
+        position: relative;
+        margin: 0;
+        padding-left: 0;
+        background-color:black;
+    }
+
+    .sidebar .content {
+        background: none repeat scroll 0 0 #fff;
+        position: absolute;
+        left: 0px;
+        right: 0;
+        top: 70px;
+        bottom: 0;
+        width: auto;
+        padding: 40px;
+        box-sizing: border-box;
+        overflow-y: scroll;
+    }
 </style>
