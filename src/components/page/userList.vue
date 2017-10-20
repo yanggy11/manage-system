@@ -1,31 +1,40 @@
 <template>
     <div class="table">
-            <el-button type="primary" @click="openUserInfo(0, 0)">新增</el-button>
-        <div class="criteria">
-            <el-select v-model="criteria.gender" placeholder="请选择">
-                <el-option
-                v-for="item in genders"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
+        <div>
+            <el-form :inline="true" :model="criteria" class="demo-form-inline" style="display:flex; justify-content: space-between;">
+                <el-form-item>
+                    <el-button type="primary" @click="openUserInfo(0,undefined)">新增</el-button>
+                </el-form-item>
+                <div>
+                    <el-form-item label="姓名">
+                        <el-input v-model="criteria.name" placeholder="姓名"></el-input>
+                    </el-form-item>
+                    <el-form-item label="性别">
+                        <el-select v-model="criteria.sex" placeholder="请选择">
+                            <el-option v-for="item in genders" :label="item.label" :value="item.value" :key="item.label"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary">查询</el-button>
+                    </el-form-item>
+                </div>
+            </el-form>
         </div>
         <el-table v-loading.body="loading" :data="tableData" border>
-            <el-table-column prop="name" label="姓名" align="center" width="130">
+            <el-table-column prop="name" label="姓名" align="center" width="140">
             </el-table-column>
-            <el-table-column prop="age" label="年龄" align="center"  width="105">
+            <el-table-column prop="age" label="年龄" align="center" width="105">
             </el-table-column>
-            <el-table-column prop="sex" label="性别" align="center"  width="105">
+            <el-table-column prop="sex" label="性别" align="center" :formatter="sexFormatter" width="105">
             </el-table-column>
-            <el-table-column prop="email" label="邮箱" align="center"  width="260">
+            <el-table-column prop="email" label="邮箱" align="center">
             </el-table-column>
-            <el-table-column prop="phone" label="手机号" align="center"  width="174">
+            <el-table-column prop="phone" label="手机号" align="center">
             </el-table-column>
-            <el-table-column label="操作" align="center"  width="178">
+            <el-table-column label="操作" align="center" width="220">
                 <template scope="scope">
-                    <el-button size="small" @click="openUserInfo(1, scope.row.id)">编辑</el-button>
-                    <el-button size="small" type="danger" @click="deleteUser(scope.row.id)">删除</el-button>
+                    <el-button size="small" @click="openUserInfo(1, scope.row.id)" icon="delete">编辑</el-button>
+                    <el-button size="small" type="danger" @click="deleteUser(scope.row.id)" icon="delete">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -34,7 +43,7 @@
             </el-pagination>
         </div>
         <div style="width:30%;">
-            <el-dialog title="收货地址" :visible.sync="userInfoDialog" :modal="true">
+            <el-dialog title="用户信息" :visible.sync="userInfoDialog" :modal="true">
                 <el-form>
                     <el-form-item label="姓名" :label-width="formLabelWidth">
                         <el-input v-model="userInfo.name" auto-complete="off"></el-input>
@@ -48,7 +57,16 @@
                     <el-form-item label="邮箱" :label-width="formLabelWidth">
                         <el-input v-model="userInfo.email" auto-complete="off"></el-input>
                     </el-form-item>
-
+                    <el-form-item label="选择" :label-width="formLabelWidth">
+                        <el-checkbox-group v-model="checkList">
+                            <el-checkbox label="复选框 A"></el-checkbox>
+                            <el-checkbox label="复选框 B"></el-checkbox>
+                            <el-checkbox label="复选框 C"></el-checkbox>
+                            <el-checkbox label="禁用"></el-checkbox>
+                            <br>
+                            <el-checkbox label="选中且禁用"></el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
                     <el-form-item label="密码" :label-width="formLabelWidth" v-if="userInfo.id == undefined">
                         <el-input type="password" v-model="userInfo.password" auto-complete="off"></el-input>
                     </el-form-item>
@@ -76,18 +94,19 @@ export default {
             total: 1,
             loading: true,
             userInfoDialog: false,
-            formLabelWidth: '120px',
+            formLabelWidth: '80px',
             userInfo: {},
             genders: [{
-                value:"0",
-                label:"男"
-            },{
-                value:"1",
-                label:"女"
+                value: "0",
+                label: "男"
+            }, {
+                value: "1",
+                label: "女"
             }],
             criteria: {
                 gender: ''
-            }
+            },
+             checkList: ['选中且禁用','复选框 A']
         }
     },
     created() {
@@ -151,9 +170,9 @@ export default {
                 then(function(data) {
                     this.userInfoDialog = false;
                     this.$message({
-                            type: 'success',
-                            message: '保存成功!'
-                        });
+                        type: 'success',
+                        message: '保存成功!'
+                    });
                     this.getData(this.cur_page, this.cur_size);
                 }, function(data) {
                     this.$message.error("加载失败!");
@@ -165,9 +184,9 @@ export default {
                 then(function(data) {
                     this.userInfoDialog = false;
                     this.$message({
-                            type: 'success',
-                            message: '保存成功!'
-                        });
+                        type: 'success',
+                        message: '保存成功!'
+                    });
                     this.getData(this.cur_page, this.cur_size);
                 }, function(data) {
                     this.$message.error("加载失败!");
@@ -203,9 +222,18 @@ export default {
 </script>
 
 <style scope>
-/* .table .el-input__inner {
-    width: 60%;
-} */
+.el-dialog__wrapper .el-input__inner {
+    width: 70%;
+}
+
+.el-dialog__wrapper .input {
+    width: 70%;
+}
+
+.criteria {
+    text-align: right;
+    display: flex;
+}
 
 .table .el-dialog--small {
     width: 30%;
@@ -216,9 +244,17 @@ export default {
 }
 
 .table .el-button {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
 }
+
 .table .criteria {
     text-align: right;
+}
+
+.el-dialog__header {
+    height: 30;
+    padding: 20px 20px 0;
+    text-align: left;
+    background-color: lightblue;
 }
 </style>
