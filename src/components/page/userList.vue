@@ -1,7 +1,7 @@
 <template>
     <div class="table">
         <div>
-            <el-form :inline="true" :model="criteria" class="demo-form-inline" style="display:flex; justify-content: space-between;">
+            <el-form :inline="true" :model="criteria"  class="demo-form-inline" style="display:flex; justify-content: space-between;">
                 <el-form-item>
                     <el-button type="primary" @click="openUserInfo(0,undefined)">新增</el-button>
                 </el-form-item>
@@ -20,27 +20,37 @@
                 </div>
             </el-form>
         </div>
-        <el-table v-loading.body="loading" :data="tableData" border>
-            <el-table-column prop="name" label="姓名" align="center" width="140">
+        <el-table v-loading.body="loading" :data="tableData" border style="width: 100%" @selection-change="selectRows" @select="selectRows">
+            <el-table-column type="selection"  width="100" fixed></el-table-column>
+            <el-table-column prop="name" label="姓名" align="center" width="150">
             </el-table-column>
-            <el-table-column prop="age" label="年龄" align="center" width="105">
+            <el-table-column prop="age" label="年龄" align="center" width="150">
             </el-table-column>
-            <el-table-column prop="sex" label="性别" align="center" :formatter="sexFormatter" width="105">
+            <el-table-column prop="sex" label="性别" align="center" :formatter="sexFormatter" width="150">
             </el-table-column>
-            <el-table-column prop="email" label="邮箱" align="center">
+            <el-table-column prop="email" label="邮箱" align="center" width="300">
             </el-table-column>
-            <el-table-column prop="phone" label="手机号" align="center">
-            </el-table-column>
-            <el-table-column label="操作" align="center" width="220">
+            <el-table-column prop="phone" label="手机号" align="center" width="200"/>
+            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="260"/>
+            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="260"/>
+            <el-table-column prop="deleteFlag" label="是否删除" align="center" :formatter="deleteFlagFormatter" width="150"/>
+            <el-table-column label="操作" align="center" width="220" fixed="right">
                 <template scope="scope">
                     <el-button size="small" @click="openUserInfo(1, scope.row.id)" icon="delete">编辑</el-button>
                     <el-button size="small" type="danger" @click="deleteUser(scope.row.id)" icon="delete">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <div class="pagination">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="sizes,total, prev, pager, next, jumper" :page-sizes="[10, 15, 20, 30]" :total="total" :page-size="cur_size">
-            </el-pagination>
+        <div class="foot_pagination">
+            <el-form>
+                <el-form-item>
+                    <el-button type="primary" @click="openUserInfo(0,undefined)">批量删除</el-button>
+                </el-form-item>
+            </el-form>
+            <div class="pagination">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="sizes,total, prev, pager, next, jumper" :page-sizes="[10, 15, 20, 30]" :total="total" :page-size="cur_size">
+                </el-pagination>
+            </div>
         </div>
         <div style="width:30%;">
             <el-dialog title="用户信息" :visible.sync="userInfoDialog" :modal="true">
@@ -85,6 +95,8 @@
 </template>
 
 <script>
+
+    import {formatDate} from '../../js/date.js'
 export default {
     data() {
         return {
@@ -121,6 +133,12 @@ export default {
             this.cur_page = val;
             this.getData(val, this.cur_size);
         },
+        selectRows (selection,row) {
+            console.log(selection.length);
+        },
+        selectAllRows (selection,row) {
+            console.log(selection.length);
+        },
         getData(currentPage, currentSize) {
             let self = this;
             self.$http.post('http://localhost:1987' + '/users/api/user/userList', { page: currentPage, pageSize: currentSize }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
@@ -135,11 +153,20 @@ export default {
                 this.$$message.error("加载失败!");
             })
         },
-        sexFormatter(row, column) {
+        sexFormatter(row) {
             if (row.sex === 0) {
                 return "男";
             }
             return "女";
+        },
+        deleteFlagFormatter(row) {
+            if (row.deleteFlag === 0) {
+                return "否";
+            }
+            return "是";
+        },
+        dateFormatter(row) {
+            return formatDate(new Date(row.createTime), "yyyy-MM-dd hh:mm:ss");
         },
         openUserInfo(flag, userId) {
             let self = this;
@@ -236,11 +263,11 @@ export default {
 }
 
 .table .el-dialog--small {
-    width: 30%;
+    width: 50%;
 }
 
 .table .el-dialog {
-    width: 30%;
+    width: 50%;
 }
 
 .table .el-button {
@@ -249,6 +276,16 @@ export default {
 
 .table .criteria {
     text-align: right;
+}
+
+.foot_pagination {
+    display:flex;
+    justify-content: space-between;
+}
+
+.foot_pagination .el-button {
+    margin-bottom: 0px;
+    margin-top: 15px;
 }
 
 .el-dialog__header {

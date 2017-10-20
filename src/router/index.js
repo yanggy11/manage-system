@@ -22,6 +22,10 @@ export default new Router({
                     component: resolve => require(['../components/page/BaseForm.vue'], resolve)
                 },
                 {
+                    path: '/routes',
+                    component: resolve => require(['../components/page/routes.vue'], resolve)
+                },
+                {
                     path: '/vueeditor',
                     component: resolve => require(['../components/page/VueEditor.vue'], resolve)    // Vue-Quill-Editor组件
                 },

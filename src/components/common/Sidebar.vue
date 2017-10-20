@@ -37,6 +37,10 @@
                             {
                                 index: 'userList',
                                 title: '用户部门关系管理'
+                            },
+                            {
+                                index: 'routes',
+                                title: 'api路由管理'
                             }
                         ]
                     },
