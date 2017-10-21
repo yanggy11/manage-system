@@ -2,15 +2,15 @@
     <div class="login-wrap">
         <div class="ms-title">后台管理系统</div>
         <div class="ms-login">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
+            <el-form :model="user" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
                 <el-form-item prop="name">
-                    <el-input v-model="ruleForm.name" placeholder="name"></el-input>
+                    <el-input v-model="user.name" placeholder="name"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                    <el-input type="password" placeholder="password" v-model="user.password" @keyup.enter.native="login('ruleForm')"></el-input>
                 </el-form-item>
                 <div class="login-btn">
-                    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                    <el-button type="primary" @click="login('ruleForm')">登录</el-button>
                 </div>
             </el-form>
         </div>
@@ -21,7 +21,7 @@
     export default {
         data: function(){
             return {
-                ruleForm: {
+                user: {
                     name: '',
                     password: ''
                 },
@@ -36,11 +36,16 @@
             }
         },
         methods: {
-            submitForm(formName) {
+            login(formName) {
                 const self = this;
-                self.$http.post('http://localhost:1987'+ '/auth/login',self.ruleForm)
+                self.$http.post('http://localhost:1987'+ '/auth/login',self.user)
                 .then(function(data) {
+                    let user = data.body.data.user;
+                    console.log(user);
+                    console.log(data.body.data);
                     localStorage.setItem("AuthenticationToken",data.body.data.token);
+                    localStorage.setItem("username",user.username);
+                    localStorage.setItem("userId",user.userId);
                     self.$router.push('/readme');
                 },function(data) {
                     console.log(data);

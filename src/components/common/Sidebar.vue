@@ -32,15 +32,23 @@
                     {
                         icon: 'el-icon-menu',
                         index: '2',
-                        title: '表格',
+                        title: '数据管理',
                         subs: [
                             {
                                 index: 'userList',
-                                title: '用户部门关系管理'
+                                title: '用户管理'
+                            },
+                            {
+                                index: 'roles',
+                                title: '权限管理'
+                            },
+                            {
+                                index: 'menus',
+                                title: '菜单管理'
                             },
                             {
                                 index: 'routes',
-                                title: 'api路由管理'
+                                title: '路由管理'
                             }
                         ]
                     },

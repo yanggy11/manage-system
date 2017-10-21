@@ -26,6 +26,14 @@ export default new Router({
                     component: resolve => require(['../components/page/routes.vue'], resolve)
                 },
                 {
+                    path: '/menus',
+                    component: resolve => require(['../components/page/menus.vue'], resolve)
+                },
+                {
+                    path: '/roles',
+                    component: resolve => require(['../components/page/roles.vue'], resolve)
+                },
+                {
                     path: '/vueeditor',
                     component: resolve => require(['../components/page/VueEditor.vue'], resolve)    // Vue-Quill-Editor组件
                 },

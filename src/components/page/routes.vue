@@ -37,7 +37,9 @@
                 </el-form-item>
             </el-form>
             <div class="pagination">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="sizes,total, prev, pager, next, jumper" :page-sizes="[10, 15, 20, 30]" :total="total" :page-size="cur_size">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" 
+                layout="sizes,total, prev, pager, next, jumper" :page-sizes="[10, 15, 20, 30]"
+                :total="total" :page-size="cur_size" :current-page="cur_page">
                 </el-pagination>
             </div>
         </div>

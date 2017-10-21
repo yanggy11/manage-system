@@ -1,7 +1,7 @@
 <template>
     <div class="table">
         <div>
-            <el-form :inline="true" :model="criteria"  class="demo-form-inline" style="display:flex; justify-content: space-between;">
+            <el-form :inline="true" :model="criteria" class="demo-form-inline" style="display:flex; justify-content: space-between;">
                 <el-form-item>
                     <el-button type="primary" @click="openUserInfo(0,undefined)">新增</el-button>
                 </el-form-item>
@@ -21,7 +21,7 @@
             </el-form>
         </div>
         <el-table v-loading.body="loading" :data="tableData" border style="width: 100%" @selection-change="selectRows" @select="selectRows">
-            <el-table-column type="selection"  width="100" fixed></el-table-column>
+            <el-table-column type="selection" width="100" fixed></el-table-column>
             <el-table-column prop="name" label="姓名" align="center" width="150">
             </el-table-column>
             <el-table-column prop="age" label="年龄" align="center" width="150">
@@ -30,10 +30,10 @@
             </el-table-column>
             <el-table-column prop="email" label="邮箱" align="center" width="300">
             </el-table-column>
-            <el-table-column prop="phone" label="手机号" align="center" width="200"/>
-            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="260"/>
-            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="260"/>
-            <el-table-column prop="deleteFlag" label="是否删除" align="center" :formatter="deleteFlagFormatter" width="150"/>
+            <el-table-column prop="phone" label="手机号" align="center" width="200" />
+            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="260" />
+            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="260" />
+            <el-table-column prop="deleteFlag" label="是否删除" align="center" :formatter="deleteFlagFormatter" width="150" />
             <el-table-column label="操作" align="center" width="220" fixed="right">
                 <template scope="scope">
                     <el-button size="small" @click="openUserInfo(1, scope.row.id)" icon="delete">编辑</el-button>
@@ -96,7 +96,7 @@
 
 <script>
 
-    import {formatDate} from '../../js/date.js'
+import { formatDate } from '../../js/date.js'
 export default {
     data() {
         return {
@@ -118,7 +118,7 @@ export default {
             criteria: {
                 gender: ''
             },
-             checkList: ['选中且禁用','复选框 A']
+            checkList: ['选中且禁用', '复选框 A']
         }
     },
     created() {
@@ -133,25 +133,26 @@ export default {
             this.cur_page = val;
             this.getData(val, this.cur_size);
         },
-        selectRows (selection,row) {
+        selectRows(selection, row) {
             console.log(selection.length);
         },
-        selectAllRows (selection,row) {
+        selectAllRows(selection, row) {
             console.log(selection.length);
         },
         getData(currentPage, currentSize) {
             let self = this;
-            self.$http.post('http://localhost:1987' + '/users/api/user/userList', { page: currentPage, pageSize: currentSize }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
-
-                let pageData = data.body;
-                self.total = pageData.totalRecord;
-                self.tableData = data.body.data;
-                self.loading = false;
-
-                this.$message.success("成功加载用户！");
-            }, function(data) {
-                this.$$message.error("加载失败!");
-            })
+            self.$http.post('http://localhost:1987' + '/users/api/user/userList',
+                { page: currentPage, pageSize: currentSize },
+                { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
+                then(function(data) {
+                    let pageData = data.body;
+                    self.total = pageData.totalRecord;
+                    self.tableData = data.body.data;
+                    self.loading = false;
+                    this.$message.success("成功加载用户！");
+                }, function(data) {
+                    this.$$message.error("加载失败!");
+                });
         },
         sexFormatter(row) {
             if (row.sex === 0) {
@@ -263,11 +264,11 @@ export default {
 }
 
 .table .el-dialog--small {
-    width: 50%;
+    width: 40%;
 }
 
 .table .el-dialog {
-    width: 50%;
+    width: 40%;
 }
 
 .table .el-button {
@@ -279,7 +280,7 @@ export default {
 }
 
 .foot_pagination {
-    display:flex;
+    display: flex;
     justify-content: space-between;
 }
 
