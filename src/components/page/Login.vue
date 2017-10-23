@@ -41,8 +41,6 @@
                 self.$http.post('http://localhost:1987'+ '/auth/login',self.user)
                 .then(function(data) {
                     let user = data.body.data.user;
-                    console.log(user);
-                    console.log(data.body.data);
                     localStorage.setItem("AuthenticationToken",data.body.data.token);
                     localStorage.setItem("username",user.username);
                     localStorage.setItem("userId",user.userId);

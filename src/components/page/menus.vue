@@ -7,37 +7,6 @@
                 </el-form-item>
             </el-form>
         </div>
-        <el-table v-loading.body="loading" :data="routes" border style="width: 100%">
-            <el-table-column type="selection" width="100" fixed/>
-            <el-table-column prop="menu" label="网关路径" align="center" width="300"/>
-            <el-table-column prop="menuName" label="转发服务" align="center" width="300">
-            </el-table-column>
-            <el-table-column prop="url" label="转发路径" align="center" width="300">
-            </el-table-column>
-            <el-table-column prop="stripPrefix" label="是否启用前缀" align="center" :formatter="prefixFormatter" width="200" />
-            <el-table-column prop="retryable" label="是否重试" align="center" :formatter="retryableFormatter" width="200" />
-            <el-table-column prop="enabled" label="是否启用" align="center" :formatter="enabledFormatter" width="200" />
-            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="260" />
-            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="260" />
-            <el-table-column label="操作" align="center" width="220" fixed="right">
-                <template scope="scope">
-                    <el-button size="small" icon="edit">编辑</el-button>
-                    <el-button size="small" type="danger" @click="enableOrDisable(scope.row.dynamicId, true)" icon="delete" v-if="scope.row.enabled == false">启用</el-button>
-                    <el-button size="small" type="danger" @click="enableOrDisable(scope.row.dynamicId, false)" icon="delete" v-if="scope.row.enabled">关闭</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div class="foot_pagination">
-            <el-form>
-                <el-form-item>
-                    <el-button type="primary">批量删除</el-button>
-                </el-form-item>
-            </el-form>
-            <div class="pagination">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="sizes,total, prev, pager, next, jumper" :page-sizes="[10, 15, 20, 30]" :total="total" :page-size="cur_size" :current-page="cur_page">
-                </el-pagination>
-            </div>
-        </div>
     </div>
 </template>
 
