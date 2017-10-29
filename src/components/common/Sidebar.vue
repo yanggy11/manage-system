@@ -1,17 +1,19 @@
 <template>
     <div class="sidebar">
+
         <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" unique-opened router>
             <template v-for="item in items">
-                <template v-if="item.subs">
-                    <el-submenu :index="item.index">
-                        <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
-                        <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">{{ subItem.title }}
+                <template v-if="item.childrens">
+                    <el-submenu :index="item.menu">
+                        <template slot="title">
+                            <i :class="item.icon"></i>{{ item.menuName }}</template>
+                        <el-menu-item v-for="(subItem,i) in item.childrens" :key="i" :index="subItem.menu">{{ subItem.menuName }}
                         </el-menu-item>
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index">
-                        <i :class="item.icon"></i>{{ item.title }}
+                    <el-menu-item :index="item.menu">
+                        <i :class="item.icon"></i>{{ item.menuName }}
                     </el-menu-item>
                 </template>
             </template>
@@ -20,82 +22,102 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                items: [
+export default {
+    data() {
+        return {
+            items: [
+            ]
+        }
+    },
+    computed: {
+        onRoutes() {
+            return this.$route.path.replace('/', '');
+        }
+    },
+    created() {
+        this.getAllMenus();
+    },
+    methods: {
+        getAllMenus() {
+            let self = this;
+            self.$http.post('http://localhost:1987' + '/users/menu/getAllMenus',{}).
+                then(function(data) {
+                   console.log(data);
+                   this.items = data.body.data;
+                }, function(data) {
+                    
+                });
+            this.items = [{
+                icon: 'el-icon-setting',
+                menu: 'readme',
+                menuName: '自述'
+            },
+            {
+                icon: 'el-icon-menu',
+                menu: '2',
+                menuName: '数据管理',
+                childrens: [
                     {
-                        icon: 'el-icon-setting',
-                        index: 'readme',
-                        title: '自述'
+                        menu: 'userList',
+                        menuName: '用户管理'
                     },
                     {
-                        icon: 'el-icon-menu',
-                        index: '2',
-                        title: '数据管理',
-                        subs: [
-                            {
-                                index: 'userList',
-                                title: '用户管理'
-                            },
-                            {
-                                index: 'roles',
-                                title: '权限管理'
-                            },
-                            {
-                                index: 'menus',
-                                title: '菜单管理'
-                            },
-                            {
-                                index: 'routes',
-                                title: '路由管理'
-                            }
-                        ]
+                        menu: 'roles',
+                        menuName: '权限管理'
+                    },
+                    {
+                        menu: 'menus',
+                        menuName: '菜单管理'
+                    },
+                    {
+                        menu: 'routes',
+                        menuName: '路由管理'
                     }
                 ]
-            }
-        },
-        computed:{
-            onRoutes(){
-                return this.$route.path.replace('/','');
-            }
+            }];
+
         }
     }
+
+}
 </script>
 
 <style scoped>
-    .sidebar{
-        display: block;
-        position: absolute;
-        width: 170px;
-        left: 0;
-        top: 70px;
-        bottom:0;
-        background: black;
-        alignment: left;
-    }
-    .sidebar > ul {
-        height:100%;
-    }
-    .el-menu {
-        border-radius: 2px;
-        list-style: none;
-        position: relative;
-        margin: 0;
-        padding-left: 0;
-        background-color:black;
-    }
+.sidebar {
+    display: block;
+    position: absolute;
+    width: 170px;
+    left: 0;
+    top: 70px;
+    bottom: 0;
+    background: black;
+    alignment: left;
+}
 
-    .sidebar .content {
-        background: none repeat scroll 0 0 #fff;
-        position: absolute;
-        left: 0px;
-        right: 0;
-        top: 70px;
-        bottom: 0;
-        width: auto;
-        padding: 40px;
-        box-sizing: border-box;
-        overflow-y: scroll;
-    }
+.sidebar>ul {
+    height: 100%;
+}
+
+.el-menu {
+    border-radius: 2px;
+    list-style: none;
+    position: relative;
+    margin: 0;
+    padding-left: 0;
+    background-color: black;
+}
+
+.sidebar .content {
+    background: none repeat scroll 0 0 #fff;
+    position: absolute;
+    left: 0px;
+    right: 0;
+    top: 70px;
+    bottom: 0;
+    width: auto;
+    padding: 40px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
 </style>
+

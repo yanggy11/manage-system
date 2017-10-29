@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     routes: [
         {
             path: '/',
@@ -12,7 +12,7 @@ export default new Router({
         {
             path: '/readme',
             component: resolve => require(['../components/common/Home.vue'], resolve),
-            children:[
+            children: [
                 {
                     path: '/',
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
@@ -30,10 +30,6 @@ export default new Router({
                     component: resolve => require(['../components/page/roles.vue'], resolve)
                 },
                 {
-                    path: '/drag',
-                    component: resolve => require(['../components/page/DragList.vue'], resolve)    // 拖拽列表组件
-                },
-                  {
                     path: '/userList',
                     component: resolve => require(['../components/page/userList.vue'], resolve)    // 拖拽列表组件
                 }
@@ -44,4 +40,22 @@ export default new Router({
             component: resolve => require(['../components/page/Login.vue'], resolve)
         },
     ]
-})
+});
+
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(res => res.meta.requireAuth)) {// 判断是否需要登录权限
+        if (localStorage.getItem('AuthenticationToken')) {// 判断是否登录
+            next()
+        } else {// 没登录则跳转到登录界面
+            next({
+                path: '/login',
+                query: { redirect: to.fullPath }
+            })
+        }
+    } else {
+        next()
+    }
+});
+
+export default router;

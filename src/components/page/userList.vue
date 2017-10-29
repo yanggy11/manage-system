@@ -142,8 +142,7 @@ export default {
         getData(currentPage, currentSize) {
             let self = this;
             self.$http.post('http://localhost:1987' + '/users/api/user/userList',
-                { page: currentPage, pageSize: currentSize },
-                { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
+                { page: currentPage, pageSize: currentSize }).
                 then(function(data) {
                     let pageData = data.body;
                     self.total = pageData.totalRecord;
