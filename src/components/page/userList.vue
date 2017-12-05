@@ -67,16 +67,6 @@
                     <el-form-item label="邮箱" :label-width="formLabelWidth">
                         <el-input v-model="userInfo.email" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="选择" :label-width="formLabelWidth">
-                        <el-checkbox-group v-model="checkList">
-                            <el-checkbox label="复选框 A"></el-checkbox>
-                            <el-checkbox label="复选框 B"></el-checkbox>
-                            <el-checkbox label="复选框 C"></el-checkbox>
-                            <el-checkbox label="禁用"></el-checkbox>
-                            <br>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                        </el-checkbox-group>
-                    </el-form-item>
                     <el-form-item label="密码" :label-width="formLabelWidth" v-if="userInfo.id == undefined">
                         <el-input type="password" v-model="userInfo.password" auto-complete="off"></el-input>
                     </el-form-item>
@@ -117,8 +107,7 @@ export default {
             }],
             criteria: {
                 gender: ''
-            },
-            checkList: ['选中且禁用', '复选框 A']
+            }
         }
     },
     created() {
@@ -141,8 +130,7 @@ export default {
         },
         getData(currentPage, currentSize) {
             let self = this;
-            self.$http.post('http://localhost:1987' + '/users/api/user/userList',
-                { page: currentPage, pageSize: currentSize }).
+            self.$http.post('http://localhost:1987' + '/users/api/user/userList', { page: currentPage, pageSize: currentSize }).
                 then(function(data) {
                     let pageData = data.body;
                     self.total = pageData.totalRecord;
@@ -172,8 +160,7 @@ export default {
             let self = this;
             self.userInfoDialog = true;
             if (flag == 1) {
-                self.$http.post('http://localhost:1987' + '/users/api/user/getUserById', { userId: userId },
-                    { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
+                self.$http.post('http://localhost:1987' + '/users/api/user/getUserById', { userId: userId }).
                     then(function(data) {
                         self.userInfo = data.body.data;
                     }, function(data) {
@@ -192,8 +179,7 @@ export default {
             }
         },
         updateUser() {
-            this.$http.post('http://localhost:1987' + '/users/api/user/updateUserInfo', this.userInfo,
-                { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
+            this.$http.post('http://localhost:1987' + '/users/api/user/updateUserInfo', this.userInfo).
                 then(function(data) {
                     this.userInfoDialog = false;
                     this.$message({
@@ -226,8 +212,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$http.post('http://localhost:1987' + '/users/api/user/delete', { userId: userId },
-                    { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
+                this.$http.post('http://localhost:1987' + '/users/api/user/delete', { userId: userId }).
                     then(function(data) {
                         this.$message({
                             type: 'success',
@@ -257,11 +242,6 @@ export default {
     width: 70%;
 }
 
-.criteria {
-    text-align: right;
-    display: flex;
-}
-
 .table .el-dialog--small {
     width: 40%;
 }
@@ -286,12 +266,5 @@ export default {
 .foot_pagination .el-button {
     margin-bottom: 0px;
     margin-top: 15px;
-}
-
-.el-dialog__header {
-    height: 30;
-    padding: 20px 20px 0;
-    text-align: left;
-    background-color: lightblue;
 }
 </style>

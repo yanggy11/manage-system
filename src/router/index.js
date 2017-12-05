@@ -15,23 +15,38 @@ const router = new Router({
             children: [
                 {
                     path: '/',
-                    component: resolve => require(['../components/page/Readme.vue'], resolve)
+                    component: resolve => require(['../components/page/Readme.vue'], resolve),
+                    meta: {
+                        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                    }
                 },
                 {
                     path: '/routes',
-                    component: resolve => require(['../components/page/routes.vue'], resolve)
+                    component: resolve => require(['../components/page/routes.vue'], resolve),
+                    meta: {
+                        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                    }
                 },
                 {
                     path: '/menus',
-                    component: resolve => require(['../components/page/menus.vue'], resolve)
+                    component: resolve => require(['../components/page/menus.vue'], resolve),
+                    meta: {
+                        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                    }
                 },
                 {
                     path: '/roles',
-                    component: resolve => require(['../components/page/roles.vue'], resolve)
+                    component: resolve => require(['../components/page/roles.vue'], resolve),
+                    meta: {
+                        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                    }
                 },
                 {
                     path: '/userList',
-                    component: resolve => require(['../components/page/userList.vue'], resolve)    // 拖拽列表组件
+                    component: resolve => require(['../components/page/userList.vue'], resolve),
+                    meta: {
+                        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                    }
                 }
             ]
         },
@@ -44,6 +59,11 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
+    let token = localStorage.getItem('AuthenticationToken');
+    //调到登录页面之前，判断是否有token，如有token，则跳入主页
+    if(to.fullPath == '/login' && token) {
+        next('/readme');
+    }
     if (to.matched.some(res => res.meta.requireAuth)) {// 判断是否需要登录权限
         if (localStorage.getItem('AuthenticationToken')) {// 判断是否登录
             next()

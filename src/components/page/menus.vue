@@ -40,7 +40,7 @@ export default {
             console.log(currentPage);
             console.log(currentSize)
             let self = this;
-            self.$http.post('http://localhost:1987' + '/users/menu/getAllMenusInpage',
+            self.$http.post('http://localhost:1987' + '/users/menu/getAllMenus',
                 { page: currentPage, pageSize: currentSize },
                 { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
                 then(function(data) {
