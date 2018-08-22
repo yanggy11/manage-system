@@ -7,7 +7,7 @@
                         <el-button type="primary" @click="openUserInfo(0,undefined)">新增</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="openUserInfo(0,undefined)">批量删除</el-button>
+                        <el-button type="primary" @click="deleteAll">批量删除</el-button>
                     </el-form-item>
                 </div>
                 <div>
@@ -20,12 +20,12 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary">查询</el-button>
+                        <el-button type="primary" @click="queryData">查询</el-button>
                     </el-form-item>
                 </div>
             </el-form>
         </div>
-        <el-table v-loading.body="loading" :data="tableData" border style="width: 100%" @selection-change="selectRows" @select="selectRows">
+        <el-table v-loading.body="loading" :data="tableData" border style="width: 100%" @selection-change="selectRows">
             <el-table-column type="selection" width="50"/>
             <el-table-column prop="name" label="姓名" align="center" width="120" />
             <el-table-column prop="age" label="年龄" align="center" width="80" />
@@ -37,7 +37,8 @@
             <el-table-column label="操作" align="center" width="160">
                 <template slot-scope="scope">
                     <el-button size="small" type="primary" @click="openUserInfo(1, scope.row.id)" icon="delete">编辑</el-button>
-                    <el-button size="small" type="danger" @click="deleteUser(scope.row.id)" icon="delete">删除</el-button>
+
+                    <el-button v-if="scope.row.deleteFlag == 0" size="small" type="danger" @click="deleteUser(scope.row.id)" icon="delete">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -48,18 +49,18 @@
             </div>
         </div>
         <div style="width:30%;">
-            <el-dialog title="用户信息" :visible.sync="userInfoDialog" :modal="true" center>
-                <el-form>
-                    <el-form-item label="姓名" :label-width="formLabelWidth">
+            <el-dialog title="用户信息" :visible.sync="userInfoDialog"  :modal="true" center>
+                <el-form ref="userForm" :model="userInfo" :rules="rules">
+                    <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
                         <el-input v-model="userInfo.name" auto-complete="off"/>
                     </el-form-item>
-                    <el-form-item label="年龄" :label-width="formLabelWidth">
+                    <el-form-item label="年龄" :label-width="formLabelWidth" prop="age">
                         <el-input v-model="userInfo.age" auto-complete="off"/>
                     </el-form-item>
-                    <el-form-item label="手机号" :label-width="formLabelWidth">
+                    <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone">
                         <el-input v-model="userInfo.phone" auto-complete="off"/>
                     </el-form-item>
-                    <el-form-item label="邮箱" :label-width="formLabelWidth">
+                    <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
                         <el-input v-model="userInfo.email" auto-complete="off"/>
                     </el-form-item>
                     <el-form-item label="密码" :label-width="formLabelWidth" v-if="userInfo.id == undefined">
@@ -72,7 +73,7 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="userInfoDialog = false">取 消</el-button>
-                    <el-button type="primary" @click="saveUserInfo()">确 定</el-button>
+                    <el-button type="primary" :disabled="userFormDisabled" @click="saveUserInfo('userForm')">确 定</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -82,9 +83,20 @@
 <script>
 
 import { formatDate } from '../../js/date.js'
-import {message} from '../../js/message'
 export default {
     data() {
+        var checkAge = (rule, value, callback) => {
+
+            console.log("value=" + value);
+            if (!value) {
+                return callback(new Error('年龄不能为空'));
+            }
+
+            if (!Number.isInteger(value)) {
+                callback(new Error('请输入数字值'));
+            }
+
+        };
         return {
             tableData: [],
             cur_page: 1,
@@ -93,7 +105,14 @@ export default {
             loading: true,
             userInfoDialog: false,
             formLabelWidth: '80px',
-            userInfo: {},
+            userInfo: {
+                name:'',
+                age:0,
+                phone:'',
+                email:'',
+                sex:'1'
+            },
+            userFormDisabled: false,
             genders: [{
                 value: "0",
                 label: "男"
@@ -103,7 +122,24 @@ export default {
             }],
             criteria: {
                 gender: ''
-            }
+            },
+            rules:{
+                name:[{ required: true, message: '姓名不能为空',trigger: 'blur'},
+                    { min:3, max: 10, message: '长度在3-10个字符之间',trigger: 'change'}
+                ],
+                age:[{ required: true, message: '年龄不能为空'}],
+
+                phone: [
+                    {required: true, message:'请输入手机号', trigger:'blur'},
+                    {max: 12, message:'长度不能大于12',trigger: 'change'}
+                ],
+                email: [
+                    {required: true, message:'请输入邮箱', trigger:'blur'},{
+                        type:'email',message:'请输入格式正确的邮箱'
+                    }
+                ]
+            },
+            selectedItems:[]
         }
     },
     created() {
@@ -118,21 +154,25 @@ export default {
             this.cur_page = val;
             this.getData(val, this.cur_size);
         },
-        selectRows(selection, row) {
-            console.log(selection.length);
+        selectRows(selection) {
+            this.selectedItems = selection;
         },
-        selectAllRows(selection, row) {
-            console.log(selection.length);
+        queryData() {
+          this.getData(this.cur_page, this.cur_size);
         },
+
         getData(currentPage, currentSize) {
             let self = this;
-            self.$http.post('http://localhost:1987' + '/users/api/user/userList', { page: currentPage, pageSize: currentSize }).
+            let data = { page: currentPage, pageSize: currentSize ,name: this.criteria.name, sex: this.criteria.sex};
+
+            console.log(data);
+            self.$http.post('http://localhost:1987' + '/users/api/user/userList', data).
                 then(function(data) {
                     let pageData = data.body;
                     self.total = pageData.totalRecord;
                     self.tableData = data.body.data;
                     self.loading = false;
-                    message({message:'成功加载用户！',
+                    this.$message({message:'成功加载用户！',
                         type:'success',
                         center:true
                     });
@@ -161,6 +201,7 @@ export default {
         openUserInfo(flag, userId) {
             let self = this;
             self.userInfoDialog = true;
+            self.userFormDisabled = false;
             if (flag == 1) {
                 self.$http.post('http://localhost:1987' + '/users/api/user/getUserById', { userId: userId }).
                     then(function(data) {
@@ -175,26 +216,30 @@ export default {
                 self.userInfo = { sex: 1 };
             }
         },
-        saveUserInfo() {
-            console.log(this.userInfo);
-            if (this.userInfo.id == undefined) {
-                this.addUser();
-            } else {
-                this.updateUser();
-            }
+        saveUserInfo(userForm) {
+            this.userFormDisabled = true;
+            this.$refs[userForm].validate((valid)=>{
+                if(valid) {
+                    if (this.userInfo.id == undefined) {
+                        this.addUser();
+                    } else {
+                        this.updateUser();
+                    }
+                }else {
+                    this.userFormDisabled = false;
+                    return false;
+                }
+            });
+
         },
         updateUser() {
             this.$http.post('http://localhost:1987' + '/users/api/user/updateUserInfo', this.userInfo).
                 then(function(data) {
                     this.userInfoDialog = false;
-                    this.$message({
-                        type: 'success',
-                        message: '保存成功!',
-                        center: true
-                    });
                     this.getData(this.cur_page, this.cur_size);
                 }, function(data) {
-                    this.$message({message:'加载失败！',
+                    this.userFormDisabled = false;
+                    this.$message({message:'操作失败！',
                         type:'error',
                         center:true
                     });
@@ -219,7 +264,6 @@ export default {
                 });
         },
         deleteUser(userId) {
-            console.log(userId);
             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -246,6 +290,53 @@ export default {
                     center:true
                 });
             });
+        },
+        deleteAll() {
+            var userIdsarr = [];
+            for(var i =0, len = this.selectedItems.length; i < len; i++) {
+                userIdsarr.push(this.selectedItems[i].id);
+            }
+
+            var data = {userIds: userIdsarr};
+
+            if(userIdsarr.length <= 0) {
+                this.$alert('请选择要删除的数据', {
+                    confirmButtonText: '确定'
+                });
+
+                return;
+            }
+            this.$confirm('是否删除数据', '', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$http.delete('http://localhost:1987' + '/users/api/user/deleteAll',{body:data}).then((res)=>{
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!',
+                            center: true
+                        });
+                    this.getData(this.cur_page, this.cur_size);
+                    },
+                    (res)=>{
+                        this.$message({
+                            type: 'error',
+                            message: '操作失败!',
+                            center: true
+                        });
+                    });
+
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+        handleSelectionChange(val) {
+            this.selectedItems = val;
         }
     }
 }
