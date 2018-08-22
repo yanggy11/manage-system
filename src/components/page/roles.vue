@@ -8,13 +8,12 @@
             </el-form>
         </div>
         <el-table v-loading.body="loading" :data="roles" border style="width: 100%">
-            <el-table-column type="selection" width="100" fixed></el-table-column>
-            <el-table-column prop="role" label="权限" align="center" width="300" />
-            <el-table-column prop="roleName" label="权限名称" align="center" width="300" />
-            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="260" />
-            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="260" />
-            <el-table-column prop="deleteFlag" label="是否删除" align="center" :formatter="deleteFlagFormatter" width="150" />
-            <el-table-column label="操作" align="center" width="220" fixed="right">
+            <el-table-column type="selection" width="50"></el-table-column>
+            <el-table-column prop="role" label="权限" align="center"  />
+            <el-table-column prop="roleName" label="权限名称" align="center"/>
+            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="180" />
+            <el-table-column prop="deleteFlag" label="是否删除" align="center" :formatter="deleteFlagFormatter" width="100" />
+            <el-table-column label="操作" align="center" width="180">
                 <template scope="scope">
                     <el-button size="small" :disabled="scope.row.deleteFlag==1" @click="openRoleInfoDialog(scope.row.id)" icon="edit">编辑</el-button>
                     <el-button size="small" :disabled="scope.row.deleteFlag==1" v-if="scope.row.deleteFlag == 0" type="danger" icon="delete" @click="deleteRole(scope.row.id)">删除</el-button>
@@ -89,9 +88,15 @@ export default {
                     self.total = pageData.totalRecord;
                     self.roles = data.body.data;
                     self.loading = false;
-                    this.$message.success("加载成功！");
+                    this.$message({message:'加载成功！',
+                        type:'success',
+                        center:true
+                    });
                 }, function(data) {
-                    this.$$message.error("加载失败!");
+                    this.$message({message:'操作失败！',
+                        type:'error',
+                        center:true
+                    });
                 })
         },
         dateFormatter(row) {
@@ -107,10 +112,16 @@ export default {
             console.log(roleId);
             let self = this;
             self.$http.post('http://localhost:1987' + '/users/roles/deleteRole', { roleId: roleId }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
-                this.$message.success("操作成功！");
+                this.$message({message:'加载成功！',
+                    type:'success',
+                    center:true
+                });
                 this.getData(this.cur_page, this.cur_size);
             }, function(data) {
-                this.$$message.error("操作失败!");
+                this.$message({message:'操作失败！',
+                    type:'error',
+                    center:true
+                });
             });
         },
         openRoleInfoDialog(roleId) {
@@ -120,7 +131,10 @@ export default {
                     then(function(data) {
                         this.role = data.body.data;
                     }, function(data) {
-                        this.$$message.error("操作失败!");
+                        this.$message({message:'操作失败！',
+                            type:'error',
+                            center:true
+                        });
                     });
             } else {
                 this.role = {};
@@ -129,19 +143,31 @@ export default {
         saveRole() {
             if (this.role.id == undefined) {
                 this.$http.post('http://localhost:1987' + '/users/roles/addRole', this.role, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
-                    this.$message.success("操作成功！");
+                    this.$message({message:'加载成功！',
+                        type:'success',
+                        center:true
+                    });
                     this.getData(this.cur_page, this.cur_size);
                     this.roleInfoDialog = false;
                 }, function(data) {
-                    this.$$message.error("操作失败!");
+                    this.$message({message:'操作失败！',
+                        type:'error',
+                        center:true
+                    });
                 });
             } else {
                 this.$http.post('http://localhost:1987' + '/users/roles/editRole', this.role, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
-                    this.$message.success("操作成功！");
+                    this.$message({message:'加载成功！',
+                        type:'success',
+                        center:true
+                    });
                     this.getData(this.cur_page, this.cur_size);
                     this.roleInfoDialog = false;
                 }, function(data) {
-                    this.$$message.error("操作失败!");
+                    this.$message({message:'操作失败！',
+                        type:'error',
+                        center:true
+                    });
                 });
             }
         }

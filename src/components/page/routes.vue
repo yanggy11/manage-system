@@ -8,21 +8,19 @@
             </el-form>
         </div>
         <el-table v-loading.body="loading" :data="routes" border style="width: 100%">
-            <el-table-column type="selection"  width="100" fixed></el-table-column>
-            <el-table-column prop="id" label="网关id" align="center" width="200">
+            <el-table-column type="selection"  width="50" fixed></el-table-column>
+            <el-table-column prop="id" label="网关id" align="center" width="100">
             </el-table-column>
-            <el-table-column prop="path" label="网关路径" align="center" width="300">
+            <el-table-column prop="path" label="网关路径" align="center" width="150">
             </el-table-column>
-            <el-table-column prop="serviceId" label="转发服务" align="center" width="300">
+            <el-table-column prop="serviceId" label="转发服务" align="center" width="200">
             </el-table-column>
-            <el-table-column prop="url" label="转发路径" align="center" width="300">
-            </el-table-column>
-            <el-table-column prop="stripPrefix" label="是否启用前缀" align="center" :formatter="prefixFormatter" width="200"/>
-            <el-table-column prop="retryable" label="是否重试" align="center" :formatter="retryableFormatter" width="200"/>
-            <el-table-column prop="enabled" label="是否启用" align="center" :formatter="enabledFormatter" width="200"/>
-            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="260"/>
-            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="260"/>
-            <el-table-column label="操作" align="center" width="220" fixed="right">
+            <el-table-column prop="stripPrefix" label="前缀" align="center" :formatter="prefixFormatter" width="60"/>
+            <el-table-column prop="retryable" label="重试" align="center" :formatter="retryableFormatter" width="60"/>
+            <el-table-column prop="enabled" label="启用" align="center" :formatter="enabledFormatter" width="60"/>
+            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="180"/>
+            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="180"/>
+            <el-table-column label="操作" align="center" width="160" fixed="right">
                 <template scope="scope">
                     <el-button size="small" icon="delete">编辑</el-button>
                     <el-button size="small" type="danger" @click="enableOrDisable(scope.row.dynamicId, true)" icon="delete" v-if="scope.row.enabled == false">启用</el-button>
@@ -83,9 +81,15 @@
                     self.routes = data.body.data;
                     self.loading = false;
 
-                    this.$message.success("成功加载用户！");
+                    this.$message({message:'加载成功！',
+                        type:'success',
+                        center:true
+                    });
                 }, function(data) {
-                    this.$$message.error("加载失败!");
+                    this.$message({message:'加载失败！',
+                        type:'error',
+                        center:true
+                    });
                 })
             },
             dateFormatter(row) {
@@ -113,10 +117,16 @@
                 console.log(dynamicId);
                 let self = this;
                 self.$http.post('http://localhost:1987' + '/users/route/disableRoute', {routeId: dynamicId,enabled:enabled }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
-                    this.$message.success("操作成功！");
+                    this.$message({message:'加载成功！',
+                        type:'success',
+                        center:true
+                    });
                     this.getData(this.cur_page, this.cur_size);
                 }, function(data) {
-                    this.$$message.error("操作失败!");
+                    this.$message({message:'加载失败！',
+                        type:'error',
+                        center:true
+                    });
                 });
             }
         }

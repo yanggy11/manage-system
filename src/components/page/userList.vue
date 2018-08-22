@@ -2,9 +2,14 @@
     <div class="table">
         <div>
             <el-form :inline="true" :model="criteria" class="demo-form-inline" style="display:flex; justify-content: space-between;">
-                <el-form-item>
-                    <el-button type="primary" @click="openUserInfo(0,undefined)">新增</el-button>
-                </el-form-item>
+                <div>
+                    <el-form-item>
+                        <el-button type="primary" @click="openUserInfo(0,undefined)">新增</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="openUserInfo(0,undefined)">批量删除</el-button>
+                    </el-form-item>
+                </div>
                 <div>
                     <el-form-item label="姓名">
                         <el-input v-model="criteria.name" placeholder="姓名"></el-input>
@@ -21,54 +26,44 @@
             </el-form>
         </div>
         <el-table v-loading.body="loading" :data="tableData" border style="width: 100%" @selection-change="selectRows" @select="selectRows">
-            <el-table-column type="selection" width="100" fixed></el-table-column>
-            <el-table-column prop="name" label="姓名" align="center" width="150">
-            </el-table-column>
-            <el-table-column prop="age" label="年龄" align="center" width="150">
-            </el-table-column>
-            <el-table-column prop="sex" label="性别" align="center" :formatter="sexFormatter" width="150">
-            </el-table-column>
-            <el-table-column prop="email" label="邮箱" align="center" width="300">
-            </el-table-column>
-            <el-table-column prop="phone" label="手机号" align="center" width="200" />
-            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="260" />
-            <el-table-column prop="updateTime" label="修改时间" align="center" :formatter="dateFormatter" width="260" />
-            <el-table-column prop="deleteFlag" label="是否删除" align="center" :formatter="deleteFlagFormatter" width="150" />
-            <el-table-column label="操作" align="center" width="220" fixed="right">
-                <template scope="scope">
-                    <el-button size="small" @click="openUserInfo(1, scope.row.id)" icon="delete">编辑</el-button>
+            <el-table-column type="selection" width="50"/>
+            <el-table-column prop="name" label="姓名" align="center" width="120" />
+            <el-table-column prop="age" label="年龄" align="center" width="80" />
+            <el-table-column prop="sex" label="性别" align="center" :formatter="sexFormatter" width="60" />
+            <el-table-column prop="phone" label="手机号" align="center" width="110"  />
+            <el-table-column prop="email" label="邮箱" align="center" width="200"/>
+            <el-table-column prop="createTime" label="创建时间" align="center" :formatter="dateFormatter" width="180" />
+            <el-table-column prop="deleteFlag" label="是否删除" align="center" :formatter="deleteFlagFormatter" width="100" />
+            <el-table-column label="操作" align="center" width="160">
+                <template slot-scope="scope">
+                    <el-button size="small" type="primary" @click="openUserInfo(1, scope.row.id)" icon="delete">编辑</el-button>
                     <el-button size="small" type="danger" @click="deleteUser(scope.row.id)" icon="delete">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <div class="foot_pagination">
-            <el-form>
-                <el-form-item>
-                    <el-button type="primary" @click="openUserInfo(0,undefined)">批量删除</el-button>
-                </el-form-item>
-            </el-form>
             <div class="pagination">
                 <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="sizes,total, prev, pager, next, jumper" :page-sizes="[10, 15, 20, 30]" :total="total" :page-size="cur_size">
                 </el-pagination>
             </div>
         </div>
         <div style="width:30%;">
-            <el-dialog title="用户信息" :visible.sync="userInfoDialog" :modal="true">
+            <el-dialog title="用户信息" :visible.sync="userInfoDialog" :modal="true" center>
                 <el-form>
                     <el-form-item label="姓名" :label-width="formLabelWidth">
-                        <el-input v-model="userInfo.name" auto-complete="off"></el-input>
+                        <el-input v-model="userInfo.name" auto-complete="off"/>
                     </el-form-item>
                     <el-form-item label="年龄" :label-width="formLabelWidth">
-                        <el-input v-model="userInfo.age" auto-complete="off"></el-input>
+                        <el-input v-model="userInfo.age" auto-complete="off"/>
                     </el-form-item>
                     <el-form-item label="手机号" :label-width="formLabelWidth">
-                        <el-input v-model="userInfo.phone" auto-complete="off"></el-input>
+                        <el-input v-model="userInfo.phone" auto-complete="off"/>
                     </el-form-item>
                     <el-form-item label="邮箱" :label-width="formLabelWidth">
-                        <el-input v-model="userInfo.email" auto-complete="off"></el-input>
+                        <el-input v-model="userInfo.email" auto-complete="off"/>
                     </el-form-item>
                     <el-form-item label="密码" :label-width="formLabelWidth" v-if="userInfo.id == undefined">
-                        <el-input type="password" v-model="userInfo.password" auto-complete="off"></el-input>
+                        <el-input type="password" v-model="userInfo.password" auto-complete="off"/>
                     </el-form-item>
                     <el-form-item label="性别" :label-width="formLabelWidth">
                         <el-radio v-model="userInfo.sex" class="radio" :label="1">女</el-radio>
@@ -87,6 +82,7 @@
 <script>
 
 import { formatDate } from '../../js/date.js'
+import {message} from '../../js/message'
 export default {
     data() {
         return {
@@ -136,9 +132,15 @@ export default {
                     self.total = pageData.totalRecord;
                     self.tableData = data.body.data;
                     self.loading = false;
-                    this.$message.success("成功加载用户！");
+                    message({message:'成功加载用户！',
+                        type:'success',
+                        center:true
+                    });
                 }, function(data) {
-                    this.$$message.error("加载失败!");
+                    this.$message({message:'加载失败！',
+                        type:'error',
+                        center:true
+                    });
                 });
         },
         sexFormatter(row) {
@@ -164,7 +166,10 @@ export default {
                     then(function(data) {
                         self.userInfo = data.body.data;
                     }, function(data) {
-                        this.$message.error("加载失败!");
+                        this.$message({message:'加载失败！',
+                            type:'error',
+                            center:true
+                        });
                     });
             } else {
                 self.userInfo = { sex: 1 };
@@ -184,11 +189,15 @@ export default {
                     this.userInfoDialog = false;
                     this.$message({
                         type: 'success',
-                        message: '保存成功!'
+                        message: '保存成功!',
+                        center: true
                     });
                     this.getData(this.cur_page, this.cur_size);
                 }, function(data) {
-                    this.$message.error("加载失败!");
+                    this.$message({message:'加载失败！',
+                        type:'error',
+                        center:true
+                    });
                 });
         },
         addUser() {
@@ -198,11 +207,15 @@ export default {
                     this.userInfoDialog = false;
                     this.$message({
                         type: 'success',
-                        message: '保存成功!'
+                        message: '保存成功!',
+                        center: true
                     });
                     this.getData(this.cur_page, this.cur_size);
                 }, function(data) {
-                    this.$message.error("加载失败!");
+                    this.$message({message:'加载失败！',
+                        type:'error',
+                        center:true
+                    });
                 });
         },
         deleteUser(userId) {
@@ -216,16 +229,21 @@ export default {
                     then(function(data) {
                         this.$message({
                             type: 'success',
-                            message: '删除成功!'
+                            message: '删除成功!',
+                            center: true
                         });
                         this.getData(this.cur_page, this.cur_size);
                     }, function(data) {
-                        this.$message.error("加载失败!");
+                        this.$message({message:'加载失败！',
+                            type:'error',
+                            center:true
+                        });
                     });
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: '已取消删除',
+                    center:true
                 });
             });
         }
@@ -240,6 +258,21 @@ export default {
 
 .el-dialog__wrapper .input {
     width: 70%;
+}
+
+.el-table th, .el-table tr {
+    background-color: #fff;
+    font-size: 14;
+}
+
+.el-table td, .el-table th {
+    padding: 0 0;
+    min-width: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    position: relative;
 }
 
 .table .el-dialog--small {
@@ -266,5 +299,17 @@ export default {
 .foot_pagination .el-button {
     margin-bottom: 0px;
     margin-top: 15px;
+}
+.content {
+    background: none repeat scroll 0 0 #fff;
+    position: absolute;
+    left: 200px;
+    right: 0;
+    top: 70px;
+    bottom: 0;
+    width: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: scroll;
 }
 </style>

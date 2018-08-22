@@ -45,7 +45,7 @@ export default {
                    console.log(data);
                    this.items = data.body.data;
                 }, function(data) {
-                    
+
                 });
             this.items = [{
                 icon: 'el-icon-setting',
@@ -118,6 +118,24 @@ export default {
     padding: 40px;
     box-sizing: border-box;
     overflow-y: scroll;
+}
+.content {
+    background: none repeat scroll 0 0 #fff;
+    position: absolute;
+    left: 200px;
+    right: 0;
+    top: 70px;
+    bottom: 0;
+    width: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+.el-submenu .el-menu-item {
+    height: 50px;
+    line-height: 50px;
+    padding: 0 45px;
+    min-width: 150px;
 }
 </style>
 
