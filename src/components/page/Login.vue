@@ -32,12 +32,17 @@
                     password: [
                         { required: true, message: '请输入密码', trigger: 'blur' }
                     ]
+                },
+                attr: {
+                    loginButtonClick: true
                 }
             }
         },
         methods: {
             login(formName) {
+
                 const self = this;
+                self.loginButtonClick = false;//点击登陆后，禁用登录按钮，
                 self.$http.post('http://localhost:1987'+ '/auth/login',self.user)
                 .then(function(data) {
                     let user = data.body.data.user;
@@ -45,8 +50,17 @@
                     localStorage.setItem("username",user.username);
                     localStorage.setItem("userId",user.userId);
                     self.$router.push('/readme');
+
+                    self.loginButtonClick = true;//登录成功后放开登录按钮
                 },function(data) {
                     console.log(data);
+                    self.$message({
+                        message: '登录失败',
+                        type: 'error',
+                        center: true
+                    });
+
+                    self.loginButtonClick = true;//登录失败放开登录按钮
                 });
             }
         }
