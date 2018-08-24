@@ -80,7 +80,7 @@ export default {
         },
         getData(currentPage, currentSize) {
             let self = this;
-            self.$http.post('http://localhost:1987' + '/users/roles/getAllRolesInPage',
+            self.$http.post('users/roles/getAllRolesInPage',
                 { page: currentPage, pageSize: currentSize },
                 { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
                 then(function(data) {
@@ -111,7 +111,7 @@ export default {
         deleteRole(roleId) {
             console.log(roleId);
             let self = this;
-            self.$http.post('http://localhost:1987' + '/users/roles/deleteRole', { roleId: roleId }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
+            self.$http.post('users/roles/deleteRole', { roleId: roleId }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
                 this.$message({message:'加载成功！',
                     type:'success',
                     center:true
@@ -127,7 +127,7 @@ export default {
         openRoleInfoDialog(roleId) {
             this.roleInfoDialog = true;
             if (roleId != undefined) {
-                this.$http.post('http://localhost:1987' + '/users/roles/getRoleById', { roleId: roleId }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
+                this.$http.post('users/roles/getRoleById', { roleId: roleId }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
                     then(function(data) {
                         this.role = data.body.data;
                     }, function(data) {
@@ -142,7 +142,7 @@ export default {
         },
         saveRole() {
             if (this.role.id == undefined) {
-                this.$http.post('http://localhost:1987' + '/users/roles/addRole', this.role, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
+                this.$http.post('users/roles/addRole', this.role, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
                     this.$message({message:'加载成功！',
                         type:'success',
                         center:true
@@ -156,7 +156,7 @@ export default {
                     });
                 });
             } else {
-                this.$http.post('http://localhost:1987' + '/users/roles/editRole', this.role, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
+                this.$http.post('users/roles/editRole', this.role, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
                     this.$message({message:'加载成功！',
                         type:'success',
                         center:true

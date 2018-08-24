@@ -1,22 +1,29 @@
-import Vue from 'vue';
-import App from './App';
-import router from './router';
-import axios from 'axios';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
-//import '../static/css/theme-green/index.css';       // 浅绿色主题
+import Vue from "vue";
+import App from "./App";
+import router from "./router";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
 import "babel-polyfill";
-import VueResource from 'vue-resource';
+import VueResource from "vue-resource";
 
 Vue.use(ElementUI);
 Vue.use(VueResource);
-Vue.prototype.$axios = axios;
+
+Vue.http.options.root = 'http://localhost:1987/';
 Vue.http.interceptors.push((request, next) => {
     let token = localStorage.getItem('AuthenticationToken');
     if (token) {
         request.headers.set('Authorization', token);
     }
     next((response) => {
+        console.log(response);
+        let status = response.status;
+        if(200!= status) {
+            Vue.$message({message:response.statusText,
+            type:'error',
+            center: true
+            })
+        }
         return response;
     });
 });

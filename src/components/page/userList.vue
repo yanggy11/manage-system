@@ -83,6 +83,7 @@
 <script>
 
 import { formatDate } from '../../js/date.js'
+import {getData, postData,deleteData} from '../../js/baseHttp'
 export default {
     data() {
         var checkAge = (rule, value, callback) => {
@@ -162,26 +163,27 @@ export default {
         },
 
         getData(currentPage, currentSize) {
-            let self = this;
-            let data = { page: currentPage, pageSize: currentSize ,name: this.criteria.name, sex: this.criteria.sex};
+//            let self = this;
+//            let data = { page: currentPage, pageSize: currentSize ,name: this.criteria.name, sex: this.criteria.sex};
+//
+//            console.log(data);
+//            postData('users/api/user/userList', data).
+//                then(function(data) {
+//
+//                    self.total = data.totalRecord;
+//                    self.tableData = data.data;
+//                    self.loading = false;
+//
+//                }, function(data) {
+//
+//                console.log(data);
+//                    self.$message({message: data,
+//                        type:'error',
+//                        center:true
+//                    });
+//                });
 
-            console.log(data);
-            self.$http.post('http://localhost:1987' + '/users/api/user/userList', data).
-                then(function(data) {
-                    let pageData = data.body;
-                    self.total = pageData.totalRecord;
-                    self.tableData = data.body.data;
-                    self.loading = false;
-                    this.$message({message:'成功加载用户！',
-                        type:'success',
-                        center:true
-                    });
-                }, function(data) {
-                    this.$message({message:'加载失败！',
-                        type:'error',
-                        center:true
-                    });
-                });
+            this.hello();
         },
         sexFormatter(row) {
             if (row.sex === 0) {
@@ -203,7 +205,7 @@ export default {
             self.userInfoDialog = true;
             self.userFormDisabled = false;
             if (flag == 1) {
-                self.$http.post('http://localhost:1987' + '/users/api/user/getUserById', { userId: userId }).
+                postData('user/getUserById', { userId: userId }).
                     then(function(data) {
                         self.userInfo = data.body.data;
                     }, function(data) {
@@ -233,7 +235,7 @@ export default {
 
         },
         updateUser() {
-            this.$http.post('http://localhost:1987' + '/users/api/user/updateUserInfo', this.userInfo).
+            postData('users/api/user/updateUserInfo', this.userInfo).
                 then(function(data) {
                     this.userInfoDialog = false;
                     this.getData(this.cur_page, this.cur_size);
@@ -246,7 +248,7 @@ export default {
                 });
         },
         addUser() {
-            this.$http.post('http://localhost:1987' + '/users/api/user/register', this.userInfo,
+            postData('users/api/user/register', this.userInfo,
                 { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).
                 then(function(data) {
                     this.userInfoDialog = false;
@@ -269,7 +271,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$http.post('http://localhost:1987' + '/users/api/user/delete', { userId: userId }).
+                postData('users/api/user/delete', { userId: userId }).
                     then(function(data) {
                         this.$message({
                             type: 'success',
@@ -312,7 +314,7 @@ export default {
                 type: 'warning',
                 center: true
             }).then(() => {
-                this.$http.delete('http://localhost:1987' + '/users/api/user/deleteAll',{body:data}).then((res)=>{
+                deleteData('users/api/user/deleteAll',data).then((res)=>{
                         this.$message({
                             type: 'success',
                             message: '删除成功!',

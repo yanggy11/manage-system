@@ -74,7 +74,7 @@
                 console.log(currentPage);
                 console.log(currentSize)
                 let self = this;
-                self.$http.post('http://localhost:1987' + '/users/route/getAllRoutesInPage', { page: currentPage, pageSize: currentSize }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
+                self.$http.post('users/route/getAllRoutesInPage', { page: currentPage, pageSize: currentSize }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
                     console.log(data.body);
                     let pageData = data.body;
                     self.total = pageData.totalRecord;
@@ -116,7 +116,7 @@
             enableOrDisable(dynamicId, enabled) {
                 console.log(dynamicId);
                 let self = this;
-                self.$http.post('http://localhost:1987' + '/users/route/disableRoute', {routeId: dynamicId,enabled:enabled }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
+                self.$http.post('users/route/disableRoute', {routeId: dynamicId,enabled:enabled }, { headers: { "Authorization": localStorage.getItem("AuthenticationToken") } }).then(function(data) {
                     this.$message({message:'加载成功！',
                         type:'success',
                         center:true
