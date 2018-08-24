@@ -163,27 +163,26 @@ export default {
         },
 
         getData(currentPage, currentSize) {
-//            let self = this;
-//            let data = { page: currentPage, pageSize: currentSize ,name: this.criteria.name, sex: this.criteria.sex};
-//
-//            console.log(data);
-//            postData('users/api/user/userList', data).
-//                then(function(data) {
-//
-//                    self.total = data.totalRecord;
-//                    self.tableData = data.data;
-//                    self.loading = false;
-//
-//                }, function(data) {
-//
-//                console.log(data);
-//                    self.$message({message: data,
-//                        type:'error',
-//                        center:true
-//                    });
-//                });
+            let self = this;
+            let data = { page: currentPage, pageSize: currentSize ,name: this.criteria.name, sex: this.criteria.sex};
 
-            this.hello();
+            console.log(data);
+            postData('users/api/user/userList', data).
+                then(function(data) {
+
+                    self.total = data.totalRecord;
+                    self.tableData = data.data;
+                    self.loading = false;
+
+                }, function(data) {
+
+                console.log(data);
+                    self.$message({message: data,
+                        type:'error',
+                        center:true
+                    });
+                });
+
         },
         sexFormatter(row) {
             if (row.sex === 0) {
